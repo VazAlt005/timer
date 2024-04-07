@@ -1,10 +1,10 @@
 import enum
 import sys
 
-from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtCore import Qt, QTimer, QEvent
 from PyQt5.QtGui import QColorConstants
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QMainWindow, QPushButton, QSpinBox, QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QMainWindow, QPushButton, QSpinBox, QTextEdit, QVBoxLayout, QWidget, \
+    QApplication
 
 
 class TimerStatus(enum.Enum):
@@ -122,7 +122,7 @@ class TimerWindow(QMainWindow):
 
 
 if __name__ == '__main__':
-    appctxt = ApplicationContext()
+    appctxt = QApplication(sys.argv)
     window = TimerWindow()
     window.show()
-    sys.exit(appctxt.app.exec_())
+    sys.exit(appctxt.exec_())
