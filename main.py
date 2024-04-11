@@ -21,12 +21,14 @@ class TimerStatus(enum.Enum):
 
 
 class ButtonText:
+    # Перевести надписи
     start, pause, reset = "Start", "Pause", "Reset"
 
 
 class TimerWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        # Перевести надпись на кнопке
         self.minutesLabel = QLabel("Minutes:")
         self.minutesSpinBox = QSpinBox()
         self.minutesSpinBox.setFixedSize(60, 23)
@@ -36,16 +38,20 @@ class TimerWidget(QWidget):
         self.minutesSpinBox.selectAll()
         self.minutesSpinBox.valueChanged.connect(self._edit_event)
         self.startButton = QPushButton(ButtonText.start)
-        self.startButton.setFixedSize(50, 23)
+        # Изменить размер кнопки 'Start'
+        self.startButton.setFixedSize(20, 23)
         self.startButton.clicked.connect(self._start_event)
         self.resetButton = QPushButton(ButtonText.reset)
-        self.resetButton.setFixedSize(50, 23)
+        # Изменить размер кнопки 'Start'
+        self.resetButton.setFixedSize(20, 23)
         self.resetButton.clicked.connect(self._reset_event)
         self.displayArea = QTextEdit()
         self.displayArea.setTextColor(QColorConstants.DarkBlue)
-        self.displayArea.setStyleSheet("border: none")
+        # Изменить обводку
+        self.displayArea.setStyleSheet("border: 20px solid black")
         self.displayArea.setFontFamily("Arial")
-        self.displayArea.setFontPointSize(38)
+        # Изменить размер шрифта
+        self.displayArea.setFontPointSize(10)
         self.displayArea.setTextInteractionFlags(Qt.NoTextInteraction)
         self.displayArea.viewport().setCursor(Qt.ArrowCursor)
         self.displayArea.viewport().installEventFilter(self)
@@ -85,6 +91,7 @@ class TimerWidget(QWidget):
             self._status = TimerStatus.counting
             self.showTime()
             self.timer.start(1000)
+            self.timer.interval()
             self.startButton.setText(ButtonText.pause)
         elif self._status == TimerStatus.counting:
             self.timer.stop()
@@ -93,22 +100,21 @@ class TimerWidget(QWidget):
 
     def _reset_event(self):
         self._status = TimerStatus.init
-        self._left_seconds = self.minutesSpinBox.value() * 60
+        self._left_seconds = (self.minutesSpinBox.value() * 60)
         self.startButton.setText(ButtonText.start)
         self.timer.stop()
         self.showTime()
 
     def _edit_event(self):
         if self._status == TimerStatus.init:
-            self._left_seconds = self.minutesSpinBox.value() * 60
+            self._left_seconds = (self.minutesSpinBox.value() * 60)
             self.showTime()
 
     def showTime(self):
         total_seconds = min(self._left_seconds, 359940)  # Max time: 99:59:00
-        hours = total_seconds // 3600
-        total_seconds = total_seconds - (hours * 3600)
-        minutes = total_seconds // 60
-        seconds = total_seconds - (minutes * 60)
+        hours = int(total_seconds // 3600)
+        minutes = int(total_seconds // 60) % 60
+        seconds = int(total_seconds) % 60
         self.displayArea.setText(
             "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
         )
