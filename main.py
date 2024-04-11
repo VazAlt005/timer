@@ -1,10 +1,19 @@
 import enum
 import sys
 
-from PyQt5.QtCore import Qt, QTimer, QEvent
-from PyQt5.QtGui import QColorConstants
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QMainWindow, QPushButton, QSpinBox, QTextEdit, QVBoxLayout, QWidget, \
-    QApplication
+from PySide6.QtCore import Qt, QTimer, QEvent
+from PySide6.QtGui import QColorConstants
+from PySide6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QPushButton,
+    QSpinBox,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+    QApplication,
+)
 
 
 class TimerStatus(enum.Enum):
@@ -48,7 +57,10 @@ class TimerWidget(QWidget):
         self.showTime()
 
     def eventFilter(self, obj, event):
-        if obj is self.displayArea.viewport() and event.type() == QEvent.MouseButtonPress:
+        if (
+            obj is self.displayArea.viewport()
+            and event.type() == QEvent.MouseButtonPress
+        ):
             if event.button() == Qt.LeftButton:
                 self.minutesSpinBox.setFocus()
                 self.minutesSpinBox.selectAll()
@@ -66,7 +78,9 @@ class TimerWidget(QWidget):
             self._left_seconds = self.minutesSpinBox.value() * 60
 
     def _start_event(self):
-        if (self._status == TimerStatus.init or self._status == TimerStatus.paused) and self._left_seconds > 0:
+        if (
+            self._status == TimerStatus.init or self._status == TimerStatus.paused
+        ) and self._left_seconds > 0:
             self._left_seconds -= 1
             self._status = TimerStatus.counting
             self.showTime()
@@ -95,7 +109,9 @@ class TimerWidget(QWidget):
         total_seconds = total_seconds - (hours * 3600)
         minutes = total_seconds // 60
         seconds = total_seconds - (minutes * 60)
-        self.displayArea.setText("{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds)))
+        self.displayArea.setText(
+            "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
+        )
         self.displayArea.setAlignment(Qt.AlignHCenter)
 
     def setWidgets(self):
@@ -121,8 +137,8 @@ class TimerWindow(QMainWindow):
         self.move(x, y)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     appctxt = QApplication(sys.argv)
     window = TimerWindow()
     window.show()
-    sys.exit(appctxt.exec_())
+    sys.exit(appctxt.exec())
